@@ -5,14 +5,14 @@ window.CVSI_RAPID_PRETEST = {
   instrument_version: "role_assignment_v2",
   expected_minutes: 5,
   full_design: { families: 4, tasks: 12, scenes: 36 },
-  sampled_task_ids: ["A01", "A02", "B01", "B02", "C02", "C03", "D02", "D03"],
+  sampled_task_ids: ["A02", "A03", "B01", "B02", "C02", "C03", "D02", "D03"],
   tasks: [
     {
-      id: "A01", family: "A",
+      id: "A03", family: "A",
       variants: [
-        { condition: "N", image_id: "A01_N", src: "assets/A01/N.png", context_template: "general_interior" },
-        { condition: "C", image_id: "A01_C", src: "assets/A01/C.png", context_template: "art_studio" },
-        { condition: "I", image_id: "A01_I", src: "assets/A01/I.png", context_template: "accounting_office" },
+        { condition: "N", image_id: "A03_N", src: "assets/A03/N.png", context_template: "general_interior" },
+        { condition: "C", image_id: "A03_C", src: "assets/A03/C.png", context_template: "gallery_prep" },
+        { condition: "I", image_id: "A03_I", src: "assets/A03/I.png", context_template: "accounting_office" },
       ],
     },
     {
