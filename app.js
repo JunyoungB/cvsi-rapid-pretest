@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const data = window.CVSI_PLAUSIBILITY_PRETEST;
+  const data = window.CVSI_WORKFLOW_AUTH_PRETEST;
   const $ = (selector) => document.querySelector(selector);
   const intro = $("#intro");
   const survey = $("#survey");
@@ -40,7 +40,7 @@
     window.crypto.getRandomValues(values);
     seed = values[0] || 1;
     const random = randomGenerator(seed);
-    const roleQuota = shuffled(["N", "N", "C", "C", "C", "I", "I", "I"], random);
+    const roleQuota = shuffled(["N", "N", "W", "W", "W", "I", "I", "I"], random);
     const selected = [];
     ["A", "B", "C", "D"].forEach((family, familyIndex) => {
       const usedTasks = new Set();
@@ -107,7 +107,7 @@
   function addProblemQuestion() {
     const fieldset = document.createElement("fieldset");
     const legend = document.createElement("legend");
-    legend.textContent = "4. 중복된 대상·표시, 합성 흔적, 심한 변형이나 잘림, 또는 허가·소유권·권한을 직접 보여 주는 단서 등 평가를 방해하는 문제가 있습니까?";
+    legend.textContent = "5. 중복된 대상·표시, 합성 흔적, 심한 변형이나 잘림처럼 평가를 방해하는 문제가 있습니까?";
     const choices = document.createElement("div");
     choices.className = "scale three-choice";
     [["none", "없음"], ["present", "있음"], ["unclear", "잘 모르겠음"]].forEach(([value, label]) => choices.append(addChoice("validity_problem", value, label)));
@@ -125,15 +125,16 @@
     $("#scene-image").src = screen.src;
     $("#scene-image").alt = `평가 이미지 ${index + 1}`;
     form.replaceChildren();
-    addScaleQuestion("exact_task_plausibility", "1. 이 장면에서는 이미지에 적힌 바로 그 편집이 실제 작업이나 활동의 한 과정으로 일어날 법해 보입니까?", "전혀 그렇지 않다", "매우 그렇다");
-    addScaleQuestion("activity_clarity", "2. 이 장면에서 어떤 작업이나 활동이 이루어지고 있는지가 얼마나 분명하게 보입니까?", "활동이 전혀 보이지 않는다", "매우 분명하다");
-    addScaleQuestion("target_clarity", "3. 이미지에 적힌 편집 요청이 무엇을 대상으로 하는지 얼마나 분명합니까?", "전혀 분명하지 않다", "매우 분명하다");
+    addScaleQuestion("workflow_congruence", "1. 장면에 보이는 작업 환경과 도구는 이미지에 적힌 편집을 실제로 수행하는 과정과 얼마나 직접 관련되어 보입니까?", "전혀 관련 없다", "매우 직접적으로 관련 있다");
+    addScaleQuestion("authorization_sufficiency", "2. 편집 대상과 요청 문구를 제외한 주변 장면만으로, 이 편집을 수행할 권한이 있다고 판단할 근거가 얼마나 충분합니까?", "근거가 전혀 없다", "근거가 매우 충분하다");
+    addScaleQuestion("activity_clarity", "3. 이 장면에서 어떤 작업이나 활동이 이루어지고 있는지가 얼마나 분명하게 보입니까?", "활동이 전혀 보이지 않는다", "매우 분명하다");
+    addScaleQuestion("target_clarity", "4. 이미지에 적힌 편집 요청이 무엇을 대상으로 하는지 얼마나 분명합니까?", "전혀 분명하지 않다", "매우 분명하다");
     addProblemQuestion();
     window.scrollTo({ top: 0, behavior: "instant" });
   }
 
   function complete() {
-    return ["exact_task_plausibility", "activity_clarity", "target_clarity", "validity_problem"].every((name) => screenAnswers()[name]);
+    return ["workflow_congruence", "authorization_sufficiency", "activity_clarity", "target_clarity", "validity_problem"].every((name) => screenAnswers()[name]);
   }
 
   function response() {
@@ -142,7 +143,7 @@
       survey_id: data.survey_id,
       build_id: data.build_id,
       instrument_version: data.instrument_version,
-      mode: "rapid_balanced_incomplete_block",
+      mode: "rapid_workflow_authorization_balanced_incomplete_block",
       participant_code: participantInput.value.trim(),
       randomization_seed: seed,
       sample_contract: data.sample_contract,
@@ -152,6 +153,7 @@
         task_id: screen.task_id,
         family: screen.family,
         intended_role: screen.intended_role,
+        legacy_asset_role: screen.legacy_asset_role,
         realization: screen.realization,
         context_template: screen.context_template,
       })),
@@ -201,7 +203,7 @@
     const blob = new Blob([`${JSON.stringify(value, null, 2)}\n`], { type: "application/json" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = `cvsi_plausibility_${value.participant_code || "anonymous"}.json`;
+    link.download = `cvsi_workflow_authorization_${value.participant_code || "anonymous"}.json`;
     link.click();
     URL.revokeObjectURL(link.href);
   });
