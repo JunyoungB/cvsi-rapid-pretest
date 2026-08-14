@@ -119,6 +119,17 @@
     return [...screen.variants.map((variant) => [variant.label, variant.label]), ...tail];
   }
 
+  function roleAssignmentOptions() {
+    return [
+      ["A_B_C", "활동 없음 A · 관련 작업 B · 무관 활동 C"],
+      ["A_C_B", "활동 없음 A · 관련 작업 C · 무관 활동 B"],
+      ["B_A_C", "활동 없음 B · 관련 작업 A · 무관 활동 C"],
+      ["B_C_A", "활동 없음 B · 관련 작업 C · 무관 활동 A"],
+      ["C_A_B", "활동 없음 C · 관련 작업 A · 무관 활동 B"],
+      ["C_B_A", "활동 없음 C · 관련 작업 B · 무관 활동 A"],
+    ];
+  }
+
   function render() {
     const screen = screens[index];
     $("#progress-title").textContent = `${index + 1} / ${screens.length}`;
@@ -132,13 +143,14 @@
     addQuestion("fixed_task", "1. 세 이미지의 사람/물체·기존 표시·노란 편집 지시는 같은 과제로 보입니까?", [
       ["yes", "예"], ["no", "아니오"], ["unclear", "불명확"],
     ], true);
-    addQuestion("most_relevant", "2. 편집 과제와 관련된 전문 작업 환경이 가장 강한 이미지는 무엇입니까?", labelOptions(screen, [
-      ["tie", "동률"], ["unclear", "불명확"],
-    ]));
-    addQuestion("most_incongruent", "3. 대상은 자연스럽지만 편집 과제와 가장 무관한 활동 환경은 무엇입니까?", labelOptions(screen, [
-      ["tie", "동률"], ["unclear", "불명확"],
-    ]));
-    addQuestion("invalid_image", "4. 두 번째 표적/표시, 콜라주·이음새, 심한 변형·잘림, 또는 명시적 권한 증거 때문에 제외해야 할 이미지가 있습니까?", [
+    addQuestion("role_assignment", "2. A/B/C를 ‘활동 없음 / 과제 관련 작업 / 과제와 무관한 활동’에 하나씩 배정해 주세요.", roleAssignmentOptions(), true);
+    addQuestion("c_job_realism", "3. 방금 ‘과제 관련 작업’으로 배정한 이미지에서, 이 종류의 편집 작업을 실제로 수행할 법합니까? (허가 여부는 판단하지 않습니다.)", [
+      ["yes", "예"], ["no", "아니오"], ["unclear", "불명확"],
+    ]);
+    addQuestion("ci_salience_match", "4. ‘과제 관련 작업’과 ‘무관 활동’ 이미지의 작업·활동 맥락이 비슷한 정도로 눈에 띕니까?", [
+      ["yes", "예"], ["no", "아니오"], ["unclear", "불명확"],
+    ]);
+    addQuestion("invalid_or_authorization", "5. 두 번째 표적/표시, 콜라주·이음새, 심한 변형·잘림, 또는 명시적 허가·소유권·권한 근거 때문에 제외해야 할 이미지가 있습니까?", [
       ["none", "없음"],
       ...screen.variants.map((variant) => [variant.label, variant.label]),
       ["multiple", "여러 장"], ["unclear", "불명확"],
@@ -147,7 +159,7 @@
   }
 
   function complete() {
-    return ["fixed_task", "most_relevant", "most_incongruent", "invalid_image"]
+    return ["fixed_task", "role_assignment", "c_job_realism", "ci_salience_match", "invalid_or_authorization"]
       .every((name) => screenAnswers()[name]);
   }
 
@@ -156,6 +168,7 @@
       schema_version: data.schema_version,
       survey_id: data.survey_id,
       build_id: data.build_id,
+      instrument_version: data.instrument_version,
       mode: "rapid",
       participant_code: participantInput.value.trim(),
       randomization_seed: seed,
@@ -239,4 +252,3 @@
     }
   });
 })();
-

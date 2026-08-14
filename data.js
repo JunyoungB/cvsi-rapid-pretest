@@ -1,7 +1,8 @@
 window.CVSI_RAPID_PRETEST = {
-  schema_version: "5.1",
-  survey_id: "cvsi_full_four_family_8task_rapid_pretest_v1",
-  build_id: "p0_full_four_family_rich_context_v2_firered",
+  schema_version: "5.2",
+  survey_id: "cvsi_full_four_family_8task_role_assignment_pretest_v2",
+  build_id: "p0_full_four_family_activity_context_v3_firered",
+  instrument_version: "role_assignment_v2",
   expected_minutes: 5,
   full_design: { families: 4, tasks: 12, scenes: 36 },
   sampled_task_ids: ["A01", "A02", "B01", "B02", "C02", "C03", "D02", "D03"],
@@ -72,4 +73,3 @@ window.CVSI_RAPID_PRETEST = {
     },
   ],
 };
-

@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light" />
     <meta name="robots" content="noindex,nofollow,noarchive" />
-    <title>CVSI 독립 rapid pretest</title>
+    <title>CVSI 독립 role-assignment pretest</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="shell">
       <section id="intro" class="card intro">
-        <div class="eyebrow">독립 RAPID PRETEST · 약 5분</div>
+        <div class="eyebrow">독립 ROLE-ASSIGNMENT PRETEST · 약 5분</div>
         <h1>이미지 구성 사전검증</h1>
         <p class="lead">같은 편집 과제의 이미지 세 장을 비교해, 대상은 같은지와 주변 맥락이 의도대로 구별되는지만 판단해 주세요.</p>
         <div class="notice">
@@ -20,8 +20,9 @@
         </div>
         <ul class="compact">
           <li>총 8개 화면·24개 이미지이며 화면 순서와 A/B/C 배치는 참여자마다 무작위입니다.</li>
-          <li>각 화면에서 네 문항에 답합니다. 이미지를 누르면 확대됩니다.</li>
-          <li>‘관련 전문 맥락’은 편집 과제와 관련된 작업 환경을 뜻하지만, 허가·소유권을 입증한다는 뜻은 아닙니다.</li>
+          <li>각 화면에서 다섯 문항에 답합니다. 이미지를 누르면 확대됩니다.</li>
+          <li>세 이미지를 ‘활동 없음 / 과제 관련 작업 / 과제와 무관한 활동’에 하나씩 배정합니다.</li>
+          <li>‘과제 관련 작업’은 그 종류의 편집을 실제로 수행할 법한 작업 환경이라는 뜻이며, 허가·소유권을 입증한다는 뜻은 아닙니다.</li>
           <li>응답은 서버로 전송되지 않습니다. 완료 후 JSON 또는 응답 코드를 연구자에게 보내 주세요.</li>
         </ul>
         <label class="field">
@@ -38,7 +39,7 @@
       <section id="survey" class="card hidden" aria-live="polite">
         <header class="survey-header">
           <div>
-            <div class="eyebrow">독립 빠른 사전검증</div>
+            <div class="eyebrow">독립 역할배정 사전검증</div>
             <h2 id="progress-title"></h2>
           </div>
           <div class="timer" id="timer">00:00</div>
@@ -49,7 +50,7 @@
         <form id="question-form" class="questions"></form>
         <div class="nav">
           <button id="back-button" type="button" class="secondary">이전</button>
-          <div id="missing-hint" class="missing-hint">네 문항에 모두 답해 주세요.</div>
+          <div id="missing-hint" class="missing-hint">다섯 문항에 모두 답해 주세요.</div>
           <button id="next-button" type="button" class="primary">다음</button>
         </div>
       </section>
