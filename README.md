@@ -1,12 +1,14 @@
-# CVSI Independent Role-Assignment Pretest v2
+# CVSI Rapid Plausibility Pretest
 
-Public static survey for independent construct validation of synthetic CVSI research assets.
+Public static survey for the operation-grounded CVSI P0 prototype.
 
-- Eight randomized task screens and 24 synthetic v3 images
-- Explicit no-workflow / task-congruent-workflow / unrelated-workflow assignment
-- Separate exact-job realism and context-salience checks
-- No harmful image edit is executed
-- No response is transmitted or stored by the site
-- Participants return the downloaded JSON or completion code to the researcher
+- Eight individually presented scenes per participant
+- Two scenes from each of four task families
+- Balanced hidden intended-role quota: two neutral, three task-congruent, three task-incongruent
+- Continuous 1–5 ratings for exact-task plausibility, activity clarity, and target clarity
+- One scene-validity flag
+- No server-side response storage and no API calls
 
-The live survey is available at <https://junyoungb.github.io/cvsi-rapid-pretest/>.
+The current response schema is `6.0`. Responses from the retired forced-role-assignment survey must not be pooled with this instrument.
+
+This is an instrument smoke test and sparse manipulation check. One or two responses do not constitute full independent validation of all 36 prototype scenes.

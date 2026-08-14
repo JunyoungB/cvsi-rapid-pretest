@@ -1,79 +1,54 @@
 <!doctype html>
 <html lang="ko">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light" />
-    <meta name="robots" content="noindex,nofollow,noarchive" />
-    <title>CVSI 독립 role-assignment pretest</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <main class="shell">
-      <section id="intro" class="card intro">
-        <div class="eyebrow">독립 ROLE-ASSIGNMENT PRETEST · 약 5분</div>
-        <h1>이미지 구성 사전검증</h1>
-        <p class="lead">같은 편집 과제의 이미지 세 장을 비교해, 대상은 같은지와 주변 맥락이 의도대로 구별되는지만 판단해 주세요.</p>
-        <div class="notice">
-          이미지에는 성인의 의복 제거, 상업 정보 변경, 증거 시간·날짜 변경, 저작권 표시 제거와 같은 문구가 포함됩니다.
-          실제 편집은 수행되지 않으며 모든 사람·문서·작품은 연구용 합성 자산입니다.
-        </div>
-        <ul class="compact">
-          <li>총 8개 화면·24개 이미지이며 화면 순서와 A/B/C 배치는 참여자마다 무작위입니다.</li>
-          <li>각 화면에서 다섯 문항에 답합니다. 이미지를 누르면 확대됩니다.</li>
-          <li>세 이미지를 ‘활동 없음 / 과제 관련 작업 / 과제와 무관한 활동’에 하나씩 배정합니다.</li>
-          <li>‘과제 관련 작업’은 그 종류의 편집을 실제로 수행할 법한 작업 환경이라는 뜻이며, 허가·소유권을 입증한다는 뜻은 아닙니다.</li>
-          <li>응답은 서버로 전송되지 않습니다. 완료 후 JSON 또는 응답 코드를 연구자에게 보내 주세요.</li>
-        </ul>
-        <label class="field">
-          <span>참여자 코드</span>
-          <input id="participant-code" maxlength="24" placeholder="예: P01" autocomplete="off" />
-        </label>
-        <label class="consent">
-          <input id="content-consent" type="checkbox" />
-          <span>안내를 확인했고 자발적으로 시작합니다.</span>
-        </label>
-        <button id="start-button" class="primary" disabled>시작</button>
-      </section>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CVSI 장면 자연스러움 사전 점검</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="shell">
+    <section id="intro" class="panel intro">
+      <p class="eyebrow">약 5분 · 이미지 8장</p>
+      <h1>CVSI 장면 자연스러움 사전 점검</h1>
+      <p>각 이미지가 어떤 작업 상황으로 보이는지와, 이미지에 적힌 편집이 그 상황에서 실제로 일어날 법한지를 확인하는 설문입니다. 정답을 맞히는 검사가 아니므로 보이는 그대로 평가해 주세요.</p>
+      <ul>
+        <li>매 화면에 이미지 한 장이 제시됩니다.</li>
+        <li>서로 다른 사람의 판단이 달라도 괜찮습니다.</li>
+        <li>노출되거나 편집이 완료된 결과 이미지는 없지만, 민감할 수 있는 편집 요청 문구가 포함됩니다.</li>
+        <li>응답은 서버에 자동 저장되지 않습니다. 마지막에 생성되는 코드를 연구자에게 보내 주세요.</li>
+      </ul>
+      <label class="text-label" for="participant-code">참여자 코드</label>
+      <input id="participant-code" type="text" maxlength="40" placeholder="예: reviewer01" autocomplete="off">
+      <label class="consent"><input id="content-consent" type="checkbox"> 안내를 읽었으며 자발적으로 참여합니다.</label>
+      <button id="start-button" class="primary" disabled>시작</button>
+    </section>
 
-      <section id="survey" class="card hidden" aria-live="polite">
-        <header class="survey-header">
-          <div>
-            <div class="eyebrow">독립 역할배정 사전검증</div>
-            <h2 id="progress-title"></h2>
-          </div>
-          <div class="timer" id="timer">00:00</div>
-        </header>
-        <div class="progress-track"><div id="progress-bar" class="progress-bar"></div></div>
-        <p class="instruction">A/B/C는 무작위입니다. 세 이미지를 비교하고 보이는 내용만 판단해 주세요.</p>
-        <div id="image-grid" class="image-grid"></div>
-        <form id="question-form" class="questions"></form>
-        <div class="nav">
-          <button id="back-button" type="button" class="secondary">이전</button>
-          <div id="missing-hint" class="missing-hint">다섯 문항에 모두 답해 주세요.</div>
-          <button id="next-button" type="button" class="primary">다음</button>
-        </div>
-      </section>
+    <section id="survey" class="panel hidden">
+      <header class="survey-header">
+        <div><span id="progress-title">1 / 8</span><span id="timer">00:00</span></div>
+        <div class="progress-track"><div id="progress-bar"></div></div>
+      </header>
+      <p class="instruction">이미지를 클릭하면 크게 볼 수 있습니다. 이미지에 적힌 편집 요청과 장면 전체를 함께 보고 답해 주세요.</p>
+      <button id="image-card" class="image-card" type="button"><img id="scene-image" alt="평가 이미지"></button>
+      <form id="question-form"></form>
+      <p id="missing-hint" class="missing-hint">모든 문항에 답해 주세요.</p>
+      <nav><button id="back-button" type="button">이전</button><button id="next-button" class="primary" type="button">다음</button></nav>
+    </section>
 
-      <section id="finish" class="card finish hidden">
-        <div class="finish-mark">✓</div>
-        <h1>완료되었습니다</h1>
-        <p>응답은 서버로 전송되지 않았습니다. JSON 파일을 내려받거나 응답 코드를 복사해 연구자에게 보내 주세요.</p>
-        <div id="duration-summary" class="summary"></div>
-        <div class="finish-actions">
-          <button id="download-json" class="primary">JSON 내려받기</button>
-          <button id="copy-code" class="secondary">응답 코드 복사</button>
-        </div>
-        <textarea id="response-code" readonly aria-label="응답 코드"></textarea>
-        <div id="copy-status" class="copy-status" role="status"></div>
-      </section>
-    </main>
+    <section id="finish" class="panel hidden">
+      <p class="eyebrow">완료</p>
+      <h1>응답이 준비됐습니다</h1>
+      <p id="duration-summary"></p>
+      <p>아래 코드를 복사해 연구자에게 보내 주세요. 원한다면 JSON 파일도 내려받을 수 있습니다.</p>
+      <textarea id="response-code" readonly></textarea>
+      <div class="finish-actions"><button id="copy-code" class="primary" type="button">응답 코드 복사</button><button id="download-json" type="button">JSON 내려받기</button></div>
+      <p id="copy-status" aria-live="polite"></p>
+    </section>
+  </main>
 
-    <dialog id="zoom-dialog">
-      <button id="close-zoom" class="close-zoom" aria-label="확대 이미지 닫기">×</button>
-      <img id="zoom-image" alt="확대 이미지" />
-    </dialog>
-    <script src="data.js"></script>
-    <script src="app.js"></script>
-  </body>
+  <dialog id="zoom-dialog"><button id="close-zoom" type="button" aria-label="닫기">닫기</button><img id="zoom-image" alt="확대 이미지"></dialog>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
 </html>

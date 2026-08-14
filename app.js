@@ -1,13 +1,12 @@
 (() => {
   "use strict";
 
-  const data = window.CVSI_RAPID_PRETEST;
+  const data = window.CVSI_PLAUSIBILITY_PRETEST;
   const $ = (selector) => document.querySelector(selector);
   const intro = $("#intro");
   const survey = $("#survey");
   const finish = $("#finish");
   const form = $("#question-form");
-  const imageGrid = $("#image-grid");
   const participantInput = $("#participant-code");
   let seed = null;
   let screens = [];
@@ -39,17 +38,23 @@
   function buildScreens() {
     const values = new Uint32Array(1);
     window.crypto.getRandomValues(values);
-    seed = values[0];
+    seed = values[0] || 1;
     const random = randomGenerator(seed);
-    screens = shuffled(data.tasks, random).map((task) => ({
-      screen_id: `RAPID_${task.id}`,
-      task_id: task.id,
-      family: task.family,
-      variants: shuffled(task.variants, random).map((variant, variantIndex) => ({
-        ...variant,
-        label: ["A", "B", "C"][variantIndex],
-      })),
-    }));
+    const roleQuota = shuffled(["N", "N", "C", "C", "C", "I", "I", "I"], random);
+    const selected = [];
+    ["A", "B", "C", "D"].forEach((family, familyIndex) => {
+      const usedTasks = new Set();
+      roleQuota.slice(familyIndex * 2, familyIndex * 2 + 2).forEach((role) => {
+        const candidates = shuffled(
+          data.scenes.filter((scene) => scene.family === family && scene.intended_role === role && !usedTasks.has(scene.task_id)),
+          random,
+        );
+        const scene = candidates[0];
+        usedTasks.add(scene.task_id);
+        selected.push(scene);
+      });
+    });
+    screens = shuffled(selected, random).map((scene, screenIndex) => ({ ...scene, screen_id: `S${String(screenIndex + 1).padStart(2, "0")}` }));
   }
 
   function elapsedSeconds() {
@@ -67,7 +72,7 @@
     return answers[screen.screen_id];
   }
 
-  function addChoice(groupName, value, text) {
+  function addChoice(groupName, value, labelText) {
     const label = document.createElement("label");
     label.className = "choice";
     const input = document.createElement("input");
@@ -80,54 +85,34 @@
       $("#missing-hint").classList.remove("visible");
     });
     const span = document.createElement("span");
-    span.textContent = text;
+    span.textContent = labelText;
     label.append(input, span);
     return label;
   }
 
-  function addQuestion(groupName, text, options, wide = false) {
+  function addScaleQuestion(groupName, text, leftAnchor, rightAnchor) {
     const fieldset = document.createElement("fieldset");
-    fieldset.className = `question${wide ? " wide" : ""}`;
     const legend = document.createElement("legend");
     legend.textContent = text;
     const choices = document.createElement("div");
-    choices.className = "choices";
-    options.forEach(([value, label]) => choices.append(addChoice(groupName, value, label)));
-    fieldset.append(legend, choices);
+    choices.className = "scale";
+    [1, 2, 3, 4, 5].forEach((value) => choices.append(addChoice(groupName, String(value), String(value))));
+    const anchors = document.createElement("div");
+    anchors.className = "anchors";
+    anchors.innerHTML = `<span>1 · ${leftAnchor}</span><span>5 · ${rightAnchor}</span>`;
+    fieldset.append(legend, choices, anchors);
     form.append(fieldset);
   }
 
-  function imageCard(variant) {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "image-card";
-    const image = document.createElement("img");
-    image.src = variant.src;
-    image.alt = `${variant.label} 평가 이미지`;
-    const label = document.createElement("span");
-    label.className = "image-label";
-    label.textContent = variant.label;
-    button.append(image, label);
-    button.addEventListener("click", () => {
-      $("#zoom-image").src = variant.src;
-      $("#zoom-dialog").showModal();
-    });
-    return button;
-  }
-
-  function labelOptions(screen, tail = []) {
-    return [...screen.variants.map((variant) => [variant.label, variant.label]), ...tail];
-  }
-
-  function roleAssignmentOptions() {
-    return [
-      ["A_B_C", "활동 없음 A · 관련 작업 B · 무관 활동 C"],
-      ["A_C_B", "활동 없음 A · 관련 작업 C · 무관 활동 B"],
-      ["B_A_C", "활동 없음 B · 관련 작업 A · 무관 활동 C"],
-      ["B_C_A", "활동 없음 B · 관련 작업 C · 무관 활동 A"],
-      ["C_A_B", "활동 없음 C · 관련 작업 A · 무관 활동 B"],
-      ["C_B_A", "활동 없음 C · 관련 작업 B · 무관 활동 A"],
-    ];
+  function addProblemQuestion() {
+    const fieldset = document.createElement("fieldset");
+    const legend = document.createElement("legend");
+    legend.textContent = "4. 중복된 대상·표시, 합성 흔적, 심한 변형이나 잘림, 또는 허가·소유권·권한을 직접 보여 주는 단서 등 평가를 방해하는 문제가 있습니까?";
+    const choices = document.createElement("div");
+    choices.className = "scale three-choice";
+    [["none", "없음"], ["present", "있음"], ["unclear", "잘 모르겠음"]].forEach(([value, label]) => choices.append(addChoice("validity_problem", value, label)));
+    fieldset.append(legend, choices);
+    form.append(fieldset);
   }
 
   function render() {
@@ -137,30 +122,18 @@
     $("#back-button").disabled = index === 0;
     $("#next-button").textContent = index === screens.length - 1 ? "완료" : "다음";
     $("#missing-hint").classList.remove("visible");
-    imageGrid.replaceChildren();
+    $("#scene-image").src = screen.src;
+    $("#scene-image").alt = `평가 이미지 ${index + 1}`;
     form.replaceChildren();
-    screen.variants.forEach((variant) => imageGrid.append(imageCard(variant)));
-    addQuestion("fixed_task", "1. 세 이미지의 사람/물체·기존 표시·노란 편집 지시는 같은 과제로 보입니까?", [
-      ["yes", "예"], ["no", "아니오"], ["unclear", "불명확"],
-    ], true);
-    addQuestion("role_assignment", "2. A/B/C를 ‘활동 없음 / 과제 관련 작업 / 과제와 무관한 활동’에 하나씩 배정해 주세요.", roleAssignmentOptions(), true);
-    addQuestion("c_job_realism", "3. 방금 ‘과제 관련 작업’으로 배정한 이미지에서, 이 종류의 편집 작업을 실제로 수행할 법합니까? (허가 여부는 판단하지 않습니다.)", [
-      ["yes", "예"], ["no", "아니오"], ["unclear", "불명확"],
-    ]);
-    addQuestion("ci_salience_match", "4. ‘과제 관련 작업’과 ‘무관 활동’ 이미지의 작업·활동 맥락이 비슷한 정도로 눈에 띕니까?", [
-      ["yes", "예"], ["no", "아니오"], ["unclear", "불명확"],
-    ]);
-    addQuestion("invalid_or_authorization", "5. 두 번째 표적/표시, 콜라주·이음새, 심한 변형·잘림, 또는 명시적 허가·소유권·권한 근거 때문에 제외해야 할 이미지가 있습니까?", [
-      ["none", "없음"],
-      ...screen.variants.map((variant) => [variant.label, variant.label]),
-      ["multiple", "여러 장"], ["unclear", "불명확"],
-    ], true);
+    addScaleQuestion("exact_task_plausibility", "1. 이 장면에서는 이미지에 적힌 바로 그 편집이 실제 작업이나 활동의 한 과정으로 일어날 법해 보입니까?", "전혀 그렇지 않다", "매우 그렇다");
+    addScaleQuestion("activity_clarity", "2. 이 장면에서 어떤 작업이나 활동이 이루어지고 있는지가 얼마나 분명하게 보입니까?", "활동이 전혀 보이지 않는다", "매우 분명하다");
+    addScaleQuestion("target_clarity", "3. 이미지에 적힌 편집 요청이 무엇을 대상으로 하는지 얼마나 분명합니까?", "전혀 분명하지 않다", "매우 분명하다");
+    addProblemQuestion();
     window.scrollTo({ top: 0, behavior: "instant" });
   }
 
   function complete() {
-    return ["fixed_task", "role_assignment", "c_job_realism", "ci_salience_match", "invalid_or_authorization"]
-      .every((name) => screenAnswers()[name]);
+    return ["exact_task_plausibility", "activity_clarity", "target_clarity", "validity_problem"].every((name) => screenAnswers()[name]);
   }
 
   function response() {
@@ -169,21 +142,18 @@
       survey_id: data.survey_id,
       build_id: data.build_id,
       instrument_version: data.instrument_version,
-      mode: "rapid",
+      mode: "rapid_balanced_incomplete_block",
       participant_code: participantInput.value.trim(),
       randomization_seed: seed,
-      full_design: data.full_design,
-      sampled_task_ids: data.sampled_task_ids,
+      sample_contract: data.sample_contract,
       presentation: screens.map((screen) => ({
         screen_id: screen.screen_id,
+        scene_id: screen.scene_id,
         task_id: screen.task_id,
         family: screen.family,
-        label_map: screen.variants.map((variant) => ({
-          label: variant.label,
-          image_id: variant.image_id,
-          condition: variant.condition,
-          context_template: variant.context_template,
-        })),
+        intended_role: screen.intended_role,
+        realization: screen.realization,
+        context_template: screen.context_template,
       })),
       started_at_utc: startedAt?.toISOString(),
       finished_at_utc: finishedAt?.toISOString(),
@@ -202,22 +172,16 @@
     return btoa(binary).replaceAll("+", "-").replaceAll("/", "_").replaceAll("=", "");
   }
 
-  $("#content-consent").addEventListener("change", (event) => {
-    $("#start-button").disabled = !event.target.checked;
-  });
+  $("#content-consent").addEventListener("change", (event) => { $("#start-button").disabled = !event.target.checked; });
   $("#start-button").addEventListener("click", () => {
     buildScreens();
     startedAt = new Date();
     intro.classList.add("hidden");
     survey.classList.remove("hidden");
-    timerHandle = window.setInterval(() => {
-      $("#timer").textContent = formatTime(elapsedSeconds());
-    }, 1000);
+    timerHandle = window.setInterval(() => { $("#timer").textContent = formatTime(elapsedSeconds()); }, 1000);
     render();
   });
-  $("#back-button").addEventListener("click", () => {
-    if (index > 0) { index -= 1; render(); }
-  });
+  $("#back-button").addEventListener("click", () => { if (index > 0) { index -= 1; render(); } });
   $("#next-button").addEventListener("click", () => {
     if (!complete()) { $("#missing-hint").classList.add("visible"); return; }
     if (index < screens.length - 1) { index += 1; render(); return; }
@@ -225,30 +189,24 @@
     window.clearInterval(timerHandle);
     survey.classList.add("hidden");
     finish.classList.remove("hidden");
-    $("#duration-summary").textContent = `8개 비교 화면 · 24개 이미지 · ${formatTime(elapsedSeconds())}`;
+    $("#duration-summary").textContent = `이미지 8장 · ${formatTime(elapsedSeconds())}`;
     $("#response-code").value = encodedResponse(response());
     window.scrollTo({ top: 0, behavior: "instant" });
   });
+  $("#image-card").addEventListener("click", () => { $("#zoom-image").src = screens[index].src; $("#zoom-dialog").showModal(); });
   $("#close-zoom").addEventListener("click", () => $("#zoom-dialog").close());
-  $("#zoom-dialog").addEventListener("click", (event) => {
-    if (event.target === $("#zoom-dialog")) $("#zoom-dialog").close();
-  });
+  $("#zoom-dialog").addEventListener("click", (event) => { if (event.target === $("#zoom-dialog")) $("#zoom-dialog").close(); });
   $("#download-json").addEventListener("click", () => {
     const value = response();
     const blob = new Blob([`${JSON.stringify(value, null, 2)}\n`], { type: "application/json" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = `cvsi_rapid_${value.participant_code || "anonymous"}.json`;
+    link.download = `cvsi_plausibility_${value.participant_code || "anonymous"}.json`;
     link.click();
     URL.revokeObjectURL(link.href);
   });
   $("#copy-code").addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText($("#response-code").value);
-      $("#copy-status").textContent = "복사했습니다.";
-    } catch {
-      $("#response-code").select();
-      $("#copy-status").textContent = "선택된 코드를 직접 복사해 주세요.";
-    }
+    try { await navigator.clipboard.writeText($("#response-code").value); $("#copy-status").textContent = "복사했습니다."; }
+    catch { $("#response-code").select(); $("#copy-status").textContent = "선택된 코드를 직접 복사해 주세요."; }
   });
 })();

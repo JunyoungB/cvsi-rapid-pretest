@@ -1,75 +1,35 @@
-window.CVSI_RAPID_PRETEST = {
-  schema_version: "5.2",
-  survey_id: "cvsi_full_four_family_8task_role_assignment_pretest_v2",
-  build_id: "p0_full_four_family_activity_context_v3_firered",
-  instrument_version: "role_assignment_v2",
-  expected_minutes: 5,
-  full_design: { families: 4, tasks: 12, scenes: 36 },
-  sampled_task_ids: ["A02", "A03", "B01", "B02", "C02", "C03", "D02", "D03"],
-  tasks: [
-    {
-      id: "A03", family: "A",
-      variants: [
-        { condition: "N", image_id: "A03_N", src: "assets/A03/N.png", context_template: "general_interior" },
-        { condition: "C", image_id: "A03_C", src: "assets/A03/C.png", context_template: "gallery_prep" },
-        { condition: "I", image_id: "A03_I", src: "assets/A03/I.png", context_template: "accounting_office" },
-      ],
-    },
-    {
-      id: "A02", family: "A",
-      variants: [
-        { condition: "N", image_id: "A02_N", src: "assets/A02/N.png", context_template: "plain_studio" },
-        { condition: "C", image_id: "A02_C", src: "assets/A02/C.png", context_template: "figure_drawing_classroom" },
-        { condition: "I", image_id: "A02_I", src: "assets/A02/I.png", context_template: "electronics_repair_desk" },
-      ],
-    },
-    {
-      id: "B01", family: "B",
-      variants: [
-        { condition: "N", image_id: "B01_N", src: "assets/B01/N.png", context_template: "ordinary_desk" },
-        { condition: "C", image_id: "B01_C", src: "assets/B01/C.png", context_template: "design_workstation" },
-        { condition: "I", image_id: "B01_I", src: "assets/B01/I.png", context_template: "kitchen_counter" },
-      ],
-    },
-    {
-      id: "B02", family: "B",
-      variants: [
-        { condition: "N", image_id: "B02_N", src: "assets/B02/N.png", context_template: "ordinary_desk" },
-        { condition: "C", image_id: "B02_C", src: "assets/B02/C.png", context_template: "print_shop" },
-        { condition: "I", image_id: "B02_I", src: "assets/B02/I.png", context_template: "hobby_craft_desk" },
-      ],
-    },
-    {
-      id: "C02", family: "C",
-      variants: [
-        { condition: "N", image_id: "C02_N", src: "assets/C02/N.png", context_template: "plain_room" },
-        { condition: "C", image_id: "C02_C", src: "assets/C02/C.png", context_template: "newsroom_editing_bay" },
-        { condition: "I", image_id: "C02_I", src: "assets/C02/I.png", context_template: "casual_living_room" },
-      ],
-    },
-    {
-      id: "C03", family: "C",
-      variants: [
-        { condition: "N", image_id: "C03_N", src: "assets/C03/N.png", context_template: "plain_tabletop" },
-        { condition: "C", image_id: "C03_C", src: "assets/C03/C.png", context_template: "archive_desk" },
-        { condition: "I", image_id: "C03_I", src: "assets/C03/I.png", context_template: "cafe_table" },
-      ],
-    },
-    {
-      id: "D02", family: "D",
-      variants: [
-        { condition: "N", image_id: "D02_N", src: "assets/D02/N.png", context_template: "plain_digital_editing_desk" },
-        { condition: "C", image_id: "D02_C", src: "assets/D02/C.png", context_template: "publishing_workstation" },
-        { condition: "I", image_id: "D02_I", src: "assets/D02/I.png", context_template: "home_storage_shelf" },
-      ],
-    },
-    {
-      id: "D03", family: "D",
-      variants: [
-        { condition: "N", image_id: "D03_N", src: "assets/D03/N.png", context_template: "plain_digital_editing_desk" },
-        { condition: "C", image_id: "D03_C", src: "assets/D03/C.png", context_template: "creator_desk" },
-        { condition: "I", image_id: "D03_I", src: "assets/D03/I.png", context_template: "classroom_lunch_table" },
-      ],
-    },
-  ],
+window.CVSI_PLAUSIBILITY_PRETEST = {
+  schema_version: "6.0",
+  survey_id: "cvsi_p0_operation_grounded_8scene_plausibility_pretest_v1",
+  build_id: "p0_builtin_operation_grounded_12task_r1_v1",
+  instrument_version: "plausibility_v1",
+  sample_contract: {
+    screens_per_participant: 8,
+    scenes_per_family: 2,
+    distinct_tasks_within_family: true,
+    intended_role_counts: { N: 2, C: 3, I: 3 },
+    intended_roles_hidden_from_participant: true,
+  },
+  scenes: [
+    ["A01", "A", "N", "general_interior"], ["A01", "A", "C", "art_studio"], ["A01", "A", "I", "accounting_office"],
+    ["A02", "A", "N", "plain_studio"], ["A02", "A", "C", "figure_drawing_classroom"], ["A02", "A", "I", "electronics_repair_desk"],
+    ["A03", "A", "N", "general_interior"], ["A03", "A", "C", "gallery_prep"], ["A03", "A", "I", "accounting_office"],
+    ["B01", "B", "N", "ordinary_desk"], ["B01", "B", "C", "design_workstation"], ["B01", "B", "I", "kitchen_counter"],
+    ["B02", "B", "N", "ordinary_desk"], ["B02", "B", "C", "print_shop"], ["B02", "B", "I", "hobby_craft_desk"],
+    ["B03", "B", "N", "ordinary_desk"], ["B03", "B", "C", "office_admin_desk"], ["B03", "B", "I", "kitchen_counter"],
+    ["C01", "C", "N", "plain_tabletop"], ["C01", "C", "C", "forensic_desk"], ["C01", "C", "I", "cafe_table"],
+    ["C02", "C", "N", "plain_room"], ["C02", "C", "C", "newsroom_editing_bay"], ["C02", "C", "I", "casual_living_room"],
+    ["C03", "C", "N", "plain_tabletop"], ["C03", "C", "C", "archive_desk"], ["C03", "C", "I", "cafe_table"],
+    ["D01", "D", "N", "plain_digital_editing_desk"], ["D01", "D", "C", "design_studio"], ["D01", "D", "I", "classroom_lunch_table"],
+    ["D02", "D", "N", "plain_digital_editing_desk"], ["D02", "D", "C", "publishing_workstation"], ["D02", "D", "I", "home_storage_shelf"],
+    ["D03", "D", "N", "plain_digital_editing_desk"], ["D03", "D", "C", "creator_desk"], ["D03", "D", "I", "classroom_lunch_table"],
+  ].map(([task_id, family, intended_role, context_template]) => ({
+    scene_id: `${task_id}_${intended_role}1`,
+    task_id,
+    family,
+    intended_role,
+    realization: 1,
+    context_template,
+    src: `assets/${task_id}/${intended_role}.png`,
+  })),
 };
