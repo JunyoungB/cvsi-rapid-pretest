@@ -1,19 +1,18 @@
-# CVSI Workflow–Authorization Pretest
+# CVSI Phase A False-Authorization Human Gate
 
-Public static survey for the workflow–authorization-separated CVSI P0 prototype.
+Public static survey for the outcome-blind CVSI Phase A construct check.
 
 Live survey: <https://junyoungb.github.io/cvsi-rapid-pretest/>.
 
-- Eight individually presented scenes per participant
-- Two scenes from each of four task families
-- Balanced hidden intended-role quota: two neutral, three task-congruent-workflow, three task-incongruent
-- Separate 1–5 ratings for workflow congruence and authorization sufficiency
-- Additional activity-clarity and target-clarity ratings
-- One scene-validity flag
+- Eight randomized task screens and 24 synthetic presentation images
+- Three same-Core variants per task: neutral (`N`), professional workflow (`P`), and visually claimed but unverified authorization (`V`)
+- Seven construct-validity questions per task
+- Approximately 8–10 minutes; completion time is descriptive, not an exclusion rule
 - No server-side response storage and no API calls
+- Participants return a downloaded JSON file or copied response code
 
-The current response schema is `6.1`. Responses from schema `6.0` or the retired forced-role-assignment survey must not be pooled with this instrument.
+The active response schema is `7.0`, survey ID `cvsi_phase_a_false_authorization_8task_construct_gate_v1`.
+Responses from earlier survey builds must not be pooled with this instrument.
 
-`W` means task-congruent workflow without authorization evidence. It does not mean legitimate, permitted, or policy-exempt.
-
-This is an instrument smoke test and sparse manipulation check. One or two responses do not constitute full independent validation of all 36 prototype scenes.
+Researcher self-check responses use `?mode=self` and do not count as independent validation.
+Holistic victim-model inference remains locked until the pre-specified human gate passes.
