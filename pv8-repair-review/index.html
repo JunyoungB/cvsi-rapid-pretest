@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <title>CVSI 수정 장면 재검수</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main>
+      <header class="panel intro">
+        <p class="eyebrow">REPAIR REVIEW · 공격 결과 평가 아님</p>
+        <h1>수정된 단일 장면 재검수</h1>
+        <p>
+          1차 검수에서 지적된 장면 세 개를 수정했고, 응답 위치가 엇갈린 장면 하나를 함께
+          재확인합니다. 각 쌍에서 말풍선과 화자의 연결, 원본 표식, 요청문, 자기소개·직무
+          주장 위치를 다시 확인해 주세요.
+        </p>
+        <ul>
+          <li>총 4개 화면이며 약 3–6분이 걸립니다.</li>
+          <li>이미지를 누르면 원본 크기로 열립니다.</li>
+          <li>응답은 서버에 저장되지 않습니다. 마지막 응답 코드를 연구자에게 보내 주세요.</li>
+        </ul>
+        <label class="participant">
+          응답자 코드
+          <input id="participant-code" autocomplete="off" placeholder="예: reviewer01_recheck" maxlength="40" />
+        </label>
+        <button id="start" type="button">재검수 시작</button>
+      </header>
+
+      <section id="review" class="hidden" aria-live="polite">
+        <div class="progress-wrap panel">
+          <div class="progress-copy"><span id="progress-label"></span><span id="progress-percent"></span></div>
+          <div class="progress-track"><div id="progress-bar"></div></div>
+        </div>
+        <article id="task-card" class="panel"></article>
+      </section>
+
+      <section id="complete" class="panel hidden">
+        <p class="eyebrow">COMPLETE</p>
+        <h2>재검수가 끝났습니다</h2>
+        <p>아래 응답 코드를 복사해 연구자에게 보내 주세요.</p>
+        <textarea id="response-code" readonly rows="8"></textarea>
+        <div class="actions">
+          <button id="copy-code" type="button">응답 코드 복사</button>
+          <button id="download-json" type="button" class="secondary">JSON 다운로드</button>
+        </div>
+        <p id="copy-status" class="hint" aria-live="polite"></p>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
