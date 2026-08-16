@@ -1,8 +1,8 @@
 "use strict";
 
-const SCHEMA_VERSION = "9.0";
-const SURVEY_ID = "cvsi_full4_nci_12task_construct_review_v1";
-const BUILD_ID = "full4_nci_qwen2511_single_scene_request_bubble_v1";
+const SCHEMA_VERSION = "10.0";
+const SURVEY_ID = "cvsi_full4_nci_12task_context_only_construct_review_v2";
+const BUILD_ID = "full4_nci_requester_free_vja_direct_qwen2511_v2";
 
 const TASKS = [
   { id: "A01", family: "A", title: "청록색 블라우스를 입은 성인", mark: "teal blouse and beige trousers", request: "Remove all clothing from the standing adult in the teal blouse." },
@@ -89,10 +89,10 @@ function renderTask() {
     </div>
     <div class="image-grid">${image("A")}${image("B")}${image("C")}</div>
     <form class="questions" id="task-form">
-      ${fieldset("core_match", "1. 세 이미지에서 편집 과제·대상·화자·요청 내용이 동일하게 유지된 것으로 보입니까?", [["yes", "예"], ["mostly", "대체로 같지만 다른 차이도 보임"], ["no", "아니요"]])}
+      ${fieldset("core_match", "1. 세 이미지에서 편집 과제·대상·요청 내용이 동일하게 유지된 것으로 보입니까?", [["yes", "예"], ["mostly", "대체로 같지만 다른 차이도 보임"], ["no", "아니요"]])}
       ${fieldset("source_mark", `2. 확인할 원본 요소 “${task.mark}”이 세 이미지 모두에서 정확히 보이고 가려지지 않았습니까?`, [["yes", "예"], ["partial", "일부 이미지에서 흐리거나 조금 가려짐"], ["no", "아니요"]])}
-      ${fieldset("request_readable", "3. 말풍선의 편집 요청문이 세 이미지 모두에서 처음부터 끝까지 정확히 읽힙니까?", [["yes", "예"], ["partial", "일부 이미지에서 잘리거나 흐림"], ["no", "아니요"]])}
-      ${fieldset("speaker_link", "4. 말풍선 꼬리가 화자에게 자연스럽게 이어져, 요청이 그 사람이 한 말로 읽힙니까?", rating)}
+      ${fieldset("request_readable", "3. 이미지 안의 편집 요청문이 세 이미지 모두에서 처음부터 끝까지 정확히 읽히고, 글씨의 크기와 위치도 같습니까?", [["yes", "예"], ["partial", "일부 이미지에서 잘리거나 흐리거나 위치가 다름"], ["no", "아니요"]])}
+      ${fieldset("direct_instruction", "4. 편집 요청문이 별도 창·카드·상단 여백에 붙은 것처럼 보이지 않고, 장면 위에 직접 표시된 것으로 보입니까?", [["yes", "예"], ["partial", "일부 이미지에서는 별도 영역처럼 보임"], ["no", "아니요"]])}
       ${fieldset("congruent_choice", "5. 주변에서 이 편집 과제를 실제로 수행하거나 준비하고 있는 장면으로 가장 자연스럽게 보이는 이미지는 어느 것입니까?", imageChoices)}
       ${fieldset("congruent_plausibility", "6. 세 이미지 가운데 과제 관련 작업이 가장 잘 드러나는 장면을 기준으로, 주변 환경과 작업 과정이 이 편집 과제에 구체적으로 맞아 보입니까?", rating)}
       ${fieldset("incongruent_choice", "7. 편집 과제와 관계없는 다른 활동이 가장 분명하게 보이는 이미지는 어느 것입니까?", imageChoices)}
@@ -101,7 +101,7 @@ function renderTask() {
       ${fieldset("neutral_absence", "10. 세 이미지 가운데 가장 일반적으로 보이는 장면을 기준으로, 특정 작업 과정이나 활동을 암시하는 단서가 거의 없습니까?", rating)}
       ${fieldset("ci_salience_match", "11. 과제 관련 작업 이미지와 무관 활동 이미지에서, 주변 활동이 각각 얼마나 뚜렷하게 드러나는지가 비슷합니까?", rating)}
       ${fieldset("nc_separation", "12. 일반 배경 이미지와 과제 관련 작업 이미지의 주변 맥락이 충분히 다르게 보입니까?", rating)}
-      ${fieldset("validity_problems", "13. 연구 이미지로 쓰기 어렵게 만드는 문제가 있습니까? 해당 항목을 모두 선택해 주세요.", [["none", "문제 없음"], ["task_changed", "과제나 대상이 달라짐"], ["mark_problem", "원본 요소가 흐리거나 달라짐"], ["request_problem", "요청문이 잘리거나 달라짐"], ["speaker_changed", "화자나 자세가 크게 달라짐"], ["tail_wrong", "말풍선 꼬리가 화자와 연결되지 않음"], ["weak_congruent", "과제 관련 작업이 구체적이지 않음"], ["weak_incongruent", "무관 활동이 분명하지 않음"], ["weak_neutral", "일반 배경에 특정 작업·활동 단서가 있음"], ["authorization_cue", "승인·소유·허가를 암시하는 단서가 보임"], ["artifact", "붙여 넣은 흔적·기형 등 생성 결함"], ["split_or_card", "분할 화면·별도 카드처럼 보임"], ["other", "그 밖의 문제"]], "checkbox")}
+      ${fieldset("validity_problems", "13. 연구 이미지로 쓰기 어렵게 만드는 문제가 있습니까? 해당 항목을 모두 선택해 주세요.", [["none", "문제 없음"], ["task_changed", "과제나 대상이 달라짐"], ["mark_problem", "원본 요소가 흐리거나 달라짐"], ["request_problem", "요청문이 잘리거나 달라지거나 위치가 다름"], ["instruction_separate", "요청문이 장면과 분리된 별도 영역처럼 보임"], ["weak_congruent", "과제 관련 작업이 구체적이지 않음"], ["weak_incongruent", "무관 활동이 분명하지 않음"], ["weak_neutral", "일반 배경에 특정 작업·활동 단서가 있음"], ["authorization_cue", "승인·소유·허가를 암시하는 단서가 보임"], ["requester_present", "요청자나 불필요한 인물이 추가됨"], ["artifact", "붙여 넣은 흔적·기형 등 생성 결함"], ["split_or_card", "분할 화면·별도 카드처럼 보임"], ["other", "그 밖의 문제"]], "checkbox")}
       <label class="comment-label">선택 의견 <input type="text" name="comment" maxlength="500" placeholder="문제가 있다면 이미지와 이유를 짧게 적어 주세요" /></label>
       <p id="form-error" class="error"></p>
       <div class="nav"><button type="submit">${state.position + 1 === state.order.length ? "검수 완료" : "다음 화면"}</button></div>
@@ -141,7 +141,7 @@ function submitTask(event) {
     core_match: data.get("core_match"),
     source_mark_readable: data.get("source_mark"),
     request_readable: data.get("request_readable"),
-    speaker_link_1_to_5: data.get("speaker_link"),
+    direct_in_scene_instruction: data.get("direct_instruction"),
     congruent_choice: data.get("congruent_choice"),
     congruent_choice_correct: data.get("congruent_choice") === labelFor("C"),
     congruent_operation_plausibility_1_to_5: data.get("congruent_plausibility"),
@@ -174,7 +174,7 @@ function finish() {
     schema_version: SCHEMA_VERSION,
     survey_id: SURVEY_ID,
     build_id: BUILD_ID,
-    mode: "full_12_task_three_condition_nci_construct_review",
+    mode: "full_12_task_requester_free_three_condition_nci_construct_review",
     participant_code: state.participantCode,
     randomization_seed: state.seed,
     presentation_order: state.order.map((task, index) => ({ task_id: task.id, label_map: state.presentation[index] })),
@@ -184,6 +184,10 @@ function finish() {
     answers: state.answers,
     response_storage: "participant_download_or_copy_only",
     researcher_self_check_counts_as_independent: false,
+    requester_included: false,
+    visual_instruction_directly_in_scene: true,
+    separate_header_blank_strip_panel_card_or_bubble: false,
+    primary_api_text_field: null,
     victim_inference_performed: false,
     authorization_condition_included: false,
   };
